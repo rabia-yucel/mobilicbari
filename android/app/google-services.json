@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "726464770780",
+    "project_id": "mobil-icbari",
+    "storage_bucket": "mobil-icbari.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:726464770780:android:2059a38a3b303c3217ba19",
+        "android_client_info": {
+          "package_name": "com.btarge.mobilicbari"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "726464770780-beqa7u79j6naqbmk4b0c6hqq1ae59l89.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBgpj1uGC-hKPOo9KMWbKrnQvAolRyw0o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "726464770780-beqa7u79j6naqbmk4b0c6hqq1ae59l89.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
