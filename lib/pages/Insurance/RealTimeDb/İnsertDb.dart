@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -11,8 +10,6 @@ import '../../../utils/constant.dart';
 import '../PostModelRobee/DataPostModel.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-
-
 class RealTimeDbInsert extends StatefulWidget {
   const RealTimeDbInsert({Key? key}) : super(key: key);
 
@@ -20,63 +17,48 @@ class RealTimeDbInsert extends StatefulWidget {
   State<RealTimeDbInsert> createState() => _RealTimeDbInsertState();
 }
 
-Future<DataPostModel?> submitdata(String plateNumber, String finCode, String carCertificateCode, String mobilePhone) async{
-
-
+Future<DataPostModel?> submitdata(String plateNumber, String finCode,
+    String carCertificateCode, String mobilePhone) async {
   //var response = await http.post(Uri.https('iwork.btarge.com','api/AccountApi/CreateInsuranceContract'),
   //var response = await http.post(Uri.https('iwork.btarge.com','api/AccountApi/CreateInsuranceContract'),
 
-
-  var response = await http.post(Uri.parse("https://iwork.btarge.com/api/AccountApi/CreateInsuranceContract"),
+  var response = await http.post(
+      Uri.parse(
+          "https://iwork.btarge.com/api/AccountApi/CreateInsuranceContract"),
       headers: {
         "Content-Type": "application/json",
-        "Accept": "application/json" },
-       body:json.encode(
-           {
-             "plateNumber": plateNumber,
-             "finCode": finCode,
-             "carCertificateCode": carCertificateCode,
-             "mobilePhone": mobilePhone,
-             //"email": email
-           }
-       )
-
-  );
-  var data =  response.body;
+        "Accept": "application/json"
+      },
+      body: json.encode({
+        "plateNumber": plateNumber,
+        "finCode": finCode,
+        "carCertificateCode": carCertificateCode,
+        "mobilePhone": mobilePhone,
+        //"email": email
+      }));
+  var data = response.body;
   print(data);
 
-  if(response.statusCode == 200){
+  if (response.statusCode == 200) {
     String responseString = response.body;
-   dataPostModelFromJson(responseString);
-
-  }
-  else {
+    dataPostModelFromJson(responseString);
+  } else {
     return null;
   }
-
-
-
-
 }
 
-
-
-
 class _RealTimeDbInsertState extends State<RealTimeDbInsert> {
-
-
   late DataPostModel _dataPostModel;
- // late Link _link;
-  TextEditingController regController =  TextEditingController();
-  TextEditingController numberController =  TextEditingController();
-  TextEditingController finController =  TextEditingController();
-  TextEditingController phoneControoler =  TextEditingController();
- // TextEditingController mailController = TextEditingController();
+  // late Link _link;
+  TextEditingController regController = TextEditingController();
+  TextEditingController numberController = TextEditingController();
+  TextEditingController finController = TextEditingController();
+  TextEditingController phoneControoler = TextEditingController();
+  // TextEditingController mailController = TextEditingController();
 
- //TextEditingController linkController = TextEditingController();
+  //TextEditingController linkController = TextEditingController();
 
-   //final databaseRef = FirebaseDatabase.instance.reference();
-
+  //final databaseRef = FirebaseDatabase.instance.reference();
 
   @override
   Widget build(BuildContext context) {
@@ -93,9 +75,9 @@ class _RealTimeDbInsertState extends State<RealTimeDbInsert> {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: <Widget>[
-                   Text("İcbari Sigorta", style: GoogleFonts.oswald(fontSize: 25)),
+                  Text("İcbari Sigorta",
+                      style: GoogleFonts.oswald(fontSize: 25)),
                   const SizedBox(height: 30),
-
                   TextFormField(
                     controller: regController,
                     decoration: InputDecoration(
@@ -105,32 +87,30 @@ class _RealTimeDbInsertState extends State<RealTimeDbInsert> {
                     ),
                   ),
                   SizedBox(height: 15),
-
                   TextFormField(
                     controller: numberController,
                     decoration: InputDecoration(
                       labelText: 'Dövlət qeydiyyat nişanı ',
                       labelStyle: GoogleFonts.oswald(fontSize: 20),
-
                       border: OutlineInputBorder(),
                     ),
                   ),
                   SizedBox(height: 15),
-
                   TextFormField(
                     controller: finController,
                     decoration: InputDecoration(
-                      labelText: 'Fin Nömrəsi ', border: OutlineInputBorder(),
+                      labelText: 'Fin Nömrəsi ',
+                      border: OutlineInputBorder(),
                       labelStyle: GoogleFonts.oswald(fontSize: 20),
                     ),
                   ),
-
                   SizedBox(height: 15),
-
                   TextFormField(
+                    keyboardType: TextInputType.phone,
                     controller: phoneControoler,
                     decoration: InputDecoration(
-                      labelText: 'Telefon nömrəsi', border: OutlineInputBorder(),
+                      labelText: 'Telefon nömrəsi',
+                      border: OutlineInputBorder(),
                       labelStyle: GoogleFonts.oswald(fontSize: 20),
                     ),
                   ),
@@ -156,30 +136,27 @@ class _RealTimeDbInsertState extends State<RealTimeDbInsert> {
                     ),
                   ), */
 
-
                   OutlinedButton.icon(
-
                     onPressed: () async {
-
-
-
                       if (regController.text.isNotEmpty &&
                           numberController.text.isNotEmpty &&
-                          finController.text.isNotEmpty
-                          && phoneControoler.text.isNotEmpty ){
-
-                        String carCertificateCode = regController.text;  // sonra elave olunan
-                        String plateNumber = numberController.text; // sonra elave olunan
-                        String finCode = finController.text; // sonra elave olunan
-                        String mobilePhone = phoneControoler.text; // sonra elave olunan
-                      //  String email = mailController.text;
-
+                          finController.text.isNotEmpty &&
+                          phoneControoler.text.isNotEmpty) {
+                        String carCertificateCode =
+                            regController.text; // sonra elave olunan
+                        String plateNumber =
+                            numberController.text; // sonra elave olunan
+                        String finCode =
+                            finController.text; // sonra elave olunan
+                        String mobilePhone =
+                            phoneControoler.text; // sonra elave olunan
+                        //  String email = mailController.text;//sonradan cixarildi
 
                         regController.clear();
                         numberController.clear();
                         finController.clear();
                         phoneControoler.clear();
-                       // mailController.clear();
+                        // mailController.clear();
 
                         Fluttertoast.showToast(
                             msg: "Tələbiniz qeydə alındı!.",
@@ -188,15 +165,14 @@ class _RealTimeDbInsertState extends State<RealTimeDbInsert> {
                             timeInSecForIosWeb: 2,
                             backgroundColor: Colors.green,
                             textColor: Colors.white,
-                            fontSize: 20.0
-                        );
+                            fontSize: 20.0);
 
+                        DataPostModel data = submitdata(plateNumber, finCode,
+                            carCertificateCode, mobilePhone) as DataPostModel;
 
-                        DataPostModel data = submitdata (plateNumber, finCode, carCertificateCode, mobilePhone) as DataPostModel;
-
-                        setState((){
-                          _dataPostModel = data ;
-                        //  _link = linkController.text as Link;
+                        setState(() {
+                          _dataPostModel = data;
+                          //  _link = linkController.text as Link;
                         });
                       }
 
@@ -217,33 +193,24 @@ class _RealTimeDbInsertState extends State<RealTimeDbInsert> {
                         /*FirebaseFirestore.instance.collection("information").add(
                             data);*/
                       } */
-
-
-
-
                     },
-
                     icon: const Icon(Icons.send),
                     label: const Text("Send",
-                        style: TextStyle(fontSize: 20, color: Colors.white,)),
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        )),
                     style: OutlinedButton.styleFrom(
                       primary: Colors.white,
                       backgroundColor: primaryColor,
                     ),
-
-
                   )
-
-
                 ],
               ),
             ),
           ],
-
         ),
       ),
     );
   }
-
-
 }
