@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 import '../service/session_data_manager.dart';
 import '../utils/constant.dart';
 import '../widgets/app_bar.dart';
@@ -33,7 +32,6 @@ class _LoginState extends State<Login> {
     super.initState();
 
     isLoggedIn();
-
   }
 
   @override
@@ -46,7 +44,6 @@ class _LoginState extends State<Login> {
   }
 
   void isLoggedIn() {
-
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       // TODO log user action
       if (user != null) {
@@ -55,7 +52,6 @@ class _LoginState extends State<Login> {
         Get.to(() => const Dashboard());
       }
     });
-
   }
 
   void _onCountryChange(CountryCode _countryCode) {
@@ -76,10 +72,11 @@ class _LoginState extends State<Login> {
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             SizedBox(height: size.height * 0.01),
             const Center(
-                child: Image(
+                /* child: Image(
               image: AssetImage('assets/directlogo.png'),
               height: 60,
-            )),
+            )*/
+                ),
             SizedBox(height: size.height * 0.01),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -105,7 +102,6 @@ class _LoginState extends State<Login> {
                       showOnlyCountryWhenClosed: false,
                       alignLeft: true,
                       favorite: const ['+994', 'aze'],
-
                     ),
                   ),
                   Expanded(child: numberInput('Phone', phoneController)),
@@ -138,7 +134,8 @@ class _LoginState extends State<Login> {
 
             SizedBox(height: size.height * 0.08),
             customButton('Login', () async {
-              SessionDataManager.setPhoneNumber(countryCode + phoneController.text);
+              SessionDataManager.setPhoneNumber(
+                  countryCode + phoneController.text);
               Get.to(() => const OTPVerification());
             }),
             SizedBox(height: size.height * 0.06),

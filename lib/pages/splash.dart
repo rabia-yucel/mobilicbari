@@ -16,8 +16,8 @@ class Splash extends StatefulWidget {
 
 class _SplashState extends State<Splash> {
   startTime() async {
-    var _duration =  const Duration(seconds: 2);
-    return  Timer(_duration, navigationPage);
+    var _duration = const Duration(seconds: 2);
+    return Timer(_duration, navigationPage);
   }
 
   void navigationPage() async {
@@ -32,7 +32,7 @@ class _SplashState extends State<Splash> {
             return const Login();
           },
         ),
-            (r) => false,
+        (r) => false,
       );
     } else {
       Navigator.pushAndRemoveUntil(
@@ -42,7 +42,7 @@ class _SplashState extends State<Splash> {
             return const Login();
           },
         ),
-            (r) => false,
+        (r) => false,
       );
     }
   }
@@ -61,11 +61,11 @@ class _SplashState extends State<Splash> {
           width: double.infinity,
           color: secondaryColor,
           child: const Center(
-            child: Image(
-              image: AssetImage('assets/directlogo.png'),
-              width: 250,
-            ),
-          )),
+              // child: Image(
+              //   image: AssetImage('assets/directlogo.png'),
+              //   width: 250,
+              // ),
+              )),
     );
   }
 }

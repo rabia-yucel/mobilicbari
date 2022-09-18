@@ -36,11 +36,9 @@ class _OTPVerificationState extends State<OTPVerification> {
     super.initState();
 
     verifyUser();
-
   }
 
   Future verifyUser() async {
-
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: SessionDataManager.getPhoneNumber(),
       timeout: Duration(seconds: 60),
@@ -48,8 +46,9 @@ class _OTPVerificationState extends State<OTPVerification> {
         //print('sms verified');
       },
       verificationFailed: (FirebaseAuthException e) {
-        if (e.code == 'invalid-phone-number') { // TODO for debug purposes
-          //print('The provided phone number is not valid.');
+        if (e.code == 'invalid-phone-number') {
+          // TODO for debug purposes
+          print('The provided phone number is not valid.');
         }
       },
       codeSent: (String verificationId, int? resendToken) {
@@ -60,9 +59,7 @@ class _OTPVerificationState extends State<OTPVerification> {
         // TODO implement timeout
       },
     );
-
   }
-
 
   @override
   void dispose() {
@@ -224,18 +221,17 @@ class _OTPVerificationState extends State<OTPVerification> {
                     hasError = true;
                   });
                 } else {
-
                   bool isVerified = await verifyOTP(currentText);
 
                   if (isVerified == true) {
                     snackBar("OTP Verified!");
                   } else {
-                    setState((){
-                      hasError = true;
+                    setState(
+                      () {
+                        hasError = true;
                       },
                     );
                   }
-
                 }
               }),
               const SizedBox(
@@ -252,67 +248,68 @@ class _OTPVerificationState extends State<OTPVerification> {
     bool isVerified = false;
 
     try {
-        PhoneAuthCredential credential = PhoneAuthProvider.credential(
-            verificationId: _verificationId, smsCode: pinText);
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: _verificationId, smsCode: pinText);
 
-        final UserCredential userCredential =
-            await FirebaseAuth.instance.signInWithCredential(credential);
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
 
-        User? user = userCredential.user;
+      User? user = userCredential.user;
 
-        if (user != null) {
+      if (user != null) {
+        CollectionReference userInfo =
+            FirebaseFirestore.instance.collection('user_info');
+        var userDoc = await userInfo.doc(user.uid).get();
 
-          CollectionReference userInfo = FirebaseFirestore.instance.collection('user_info');
-          var userDoc = await userInfo.doc(user.uid).get();
+        var currentTime = DateTime.now();
 
-          var currentTime = DateTime.now();
+        if (!userDoc.exists) {
+          userInfo
+              .doc(user.uid)
+              .set({
+                'user_id': user.uid,
+                'user_name': user.phoneNumber,
+                'user_icon': "",
+                'phone_number': user.phoneNumber,
+                'allow_merchant_notifications': true,
+                'allow_bank_notifications': true,
+                'instance_time': currentTime,
+                'update_time': currentTime,
+                'status': 'active',
+                'last_login_time': currentTime,
+              })
+              .then((value) => print("User Added"))
+              .catchError((error) => print("Failed to add user: $error"));
 
-          if (!userDoc.exists) {
+          SessionDataManager.setAllowBankNotifications(true);
+          SessionDataManager.setAllowMerchantNotifications(true);
+        } else {
+          userInfo
+              .doc(user.uid)
+              .update({'last_login_time': currentTime})
+              .then((value) => print("User Updated"))
+              .catchError((error) => print("Failed to update user: $error"));
 
-              userInfo.doc(user.uid).set(
-                  {
-                    'user_id': user.uid,
-                    'user_name': user.phoneNumber,
-                    'user_icon': "",
-                    'phone_number': user.phoneNumber,
-                    'allow_merchant_notifications': true,
-                    'allow_bank_notifications': true,
-                    'instance_time': currentTime,
-                    'update_time': currentTime,
-                    'status': 'active',
-                    'last_login_time': currentTime,
-                  })
-                  .then((value) => print("User Added"))
-                  .catchError((error) =>
-                  print("Failed to add user: $error"));
-
-                 SessionDataManager.setAllowBankNotifications(true);
-                 SessionDataManager.setAllowMerchantNotifications(true);
-
-            } else{
-              userInfo.doc(user.uid).update({'last_login_time': currentTime})
-                  .then((value) => print("User Updated"))
-                  .catchError((error) => print("Failed to update user: $error"));
-
-              SessionDataManager.setAllowBankNotifications(userDoc.get('allow_bank_notifications'));
-             SessionDataManager.setAllowMerchantNotifications(userDoc.get('allow_merchant_notifications'));
-            }
-
-            SessionDataManager.setUserId(user.uid);
-            SessionDataManager.setPhoneNumber(user.phoneNumber);
-            isVerified = true;
+          SessionDataManager.setAllowBankNotifications(
+              userDoc.get('allow_bank_notifications'));
+          SessionDataManager.setAllowMerchantNotifications(
+              userDoc.get('allow_merchant_notifications'));
         }
-      } on FirebaseAuthException catch (e) {
-          if (e.code == 'account-exists-with-different-credential') {
-            // TODO handle the error here
-          }
-          else if (e.code == 'invalid-credential') {
-            // TODO handle the error here
-          }
-      } catch (e) {
-          // TODO handle the error here
-      }
 
-      return isVerified;
+        SessionDataManager.setUserId(user.uid);
+        SessionDataManager.setPhoneNumber(user.phoneNumber);
+        isVerified = true;
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'account-exists-with-different-credential') {
+        // TODO handle the error here
+      } else if (e.code == 'invalid-credential') {
+        // TODO handle the error here
+      }
+    } catch (e) {
+      // TODO handle the error here
+    }
+
+    return isVerified;
   }
 }
